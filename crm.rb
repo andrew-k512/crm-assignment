@@ -3,96 +3,186 @@ require_relative 'contact.rb'
 class CRM
 
   def initialize
-    @main_menu = true
-
 
   end
 
   def main_menu
-  while true # repeat indefinitely
-    print_main_menu
-    user_selected = gets.to_i
-    call_option(user_selected)
+    while true
+      print_main_menu
+      user_selected = gets.to_i
+      call_option(user_selected)
+    end
   end
-end
 
-def print_main_menu
-  puts '[1] Add a new contact'
-  puts '[2] Modify an existing contact'
-  puts '[3] Delete a contact'
-  puts '[4] Display all the contacts'
-  puts '[5] Search by attribute'
-  puts '[6] Exit'
-  puts 'Enter a number: '
-end
+  def print_main_menu
+    puts '[1] Add a new contact'
+    puts '[2] Modify an existing contact'
+    puts '[3] Delete a contact'
+    puts '[4] Display all the contacts'
+    puts '[5] Search by attribute'
+    puts '[6] Exit'
+    puts 'Enter a number: '
+  end
 
   def call_option(user_selected)
     case user_selected
-      when 1 then add_new_contact
-      when 2 then modify_existing_contact
-      when 3 then delete_contact
-      when 4 then display_all_contacts
-      when 5 then search_by_attribute
-      when 6 then exit
+    when 1 then add_new_contact
+    when 2 then modify_existing_contact
+    when 3 then delete_contact
+    when 4 then display_all_contacts
+    when 5 then search_by_attribute
+    when 6 then
+      puts "Exiting..."
+      exit
     end
-end
+  end
 
-def add_new_contact
-  print 'Enter First Name: '
-  first_name = gets.chomp
+  def add_new_contact
+    print 'Enter First Name: '
+    first_name = gets.chomp
 
-  print 'Enter Last Name: '
-  last_name = gets.chomp
+    print 'Enter Last Name: '
+    last_name = gets.chomp
 
-  print 'Enter Email Address: '
-  email = gets.chomp
+    print 'Enter Email Address: '
+    email = gets.chomp
 
-  print 'Enter a Note: '
-  note = gets.chomp
+    print 'Enter a Note: '
+    note = gets.chomp
 
-  Contact.create(first_name, last_name, email, note)
-end
+    # Contact.create(first_name, last_name, email, note)
+
+    contact = Contact.create(
+      first_name: first_name,
+      last_name:  last_name,
+      email:      email,
+      note:       note
+    )
+
+  end
+
+
+
+
+
+
 
   def modify_existing_contact
-    print 'What contact would you like to modify? Please enter their last name.'
-    name = gets.chomp
+    print 'Enter the id of the contact you would like to modify: '
+    puts""
+    id = gets.to_i
+    contact = Contact.find(id)
 
-    print 'Which would you like modify: first_name, last_name, email, or note?'
-    attribute = gets.chomp
+    print 'What attribute would you like to change?'
+    puts ""
+    print '1 = First name, 2 = Last name, 3 = Email, 4 =Note'
+    puts ""
+    attribute_number = gets.to_i
+    attribute_name = translate_attribute_num_to_name(attribute_number)
 
-    print 'And what would you like to change it to?'
-    value = gets.chomp
+    print "What is the new #{attribute_name}?"
+    puts""
+    attribute_value = gets.chomp
 
-    Contact.find_by('last_name', name).update(attribute, value)
-
+    # contact.update(attribute_name, attribute_value)
+    # contact.update(:last_name => attribute_value)
+    contact.update(attribute_name => attribute_value)
   end
+
+
+
+
+
 
   def delete_contact
-    print "What is the last name of the contact you would like to delete? \r\n"
-    name = gets.chomp
+    # display_all_contacts
+    print 'Enter the id of the contact you want to delete: '
+    puts ""
+    id = gets.to_i
 
-    print "Contact #{name} has been deleted.\r\n"
-    Contact.find_by('last_name', name).delete(name)
+    contact = Contact.find(id)
+    contact.delete
 
+    # Contact.find_by('first_name', name).delete
+    # display_all_contacts
   end
+
+
+
+
+#==============================Three separate display methods used in different parts of this file
 
   def display_all_contacts
-   print Contact.all.inspect
+    print "Displaying all contacts: "
+    puts ""
+    display_contacts(Contact.all)
   end
+
+  def display_contact(contact)
+    puts "ID: #{contact.id}, Name: #{contact.full_name}, Email: #{contact.email}, Note: #{contact.note}"
+  end
+
+  def display_contacts(contacts)
+    contacts.each do |contact|
+      display_contact(contact)
+    end
+  end
+
+
+
+
+
 
   def search_by_attribute
-    print "Please enter the attribute you would like to search by, first_name, last_name, or email."
-    attribute = gets.chomp
 
-    print "Now put in the value of that field to search."
-    value = gets.chomp
+    puts 'Which attribute do you wish to search by?'
+    puts '1 = First name, 2 = Last name, 4 = email, 4 = note'
+    attribute_number = gets.to_i
+    attribute_name = translate_attribute_num_to_name(attribute_number)
 
-    Contact.find_by(attribute, value)
-    
+    puts "Search by #{attribute_name}: "
+    attribute_value = gets.chomp
+
+    contact = Contact.find_by(attribute_name => attribute_value)
+
+    display_contact(contact)
+
   end
+
+
+
+
+
+  def translate_attribute_num_to_name(attribute_number)
+    case attribute_number
+    when 1 then
+       :first_name
+    when 2 then
+       :last_name
+    when 3 then
+       :email
+    when 4 then
+       :note
+    end
+  end
+
+
+
+
 
 
 end
 
-a_crm_app = CRM.new
-a_crm_app.main_menu
+z = CRM.new
+z.main_menu
+
+
+at_exit do
+  ActiveRecord::Base.connection.close
+end
+# By default, SQLite allows 5 concurrent connections. Unfortunately, MiniRecord
+# will open connections, but it won't close them automatically. What this means
+# is that every 6th time you restart your CRM, there won't be any connections left
+# and you'll get a mysterious Timeout error.
+# This will ensure that as long as your program shuts down gracefully,
+# it'll close the connection to the database.

@@ -3,8 +3,20 @@ require 'active_record'
 require 'mini_record'
 
 ActiveRecord::Base.establish_connection(adapter: 'sqlite3', database: 'crm.sqlite3')
+# ^As soon as we inherit from ActiveRecord::Base, ActiveRecord will also start
+# to consider this class to represent a single database table. That means that
+# every time we create a new Contact record, it will automatically be inserted
+# into the contacts database table.
 
 class Contact < ActiveRecord::Base
+
+  field :first_name, as: :string
+  field :last_name,  as: :string
+  field :email,      as: :string
+  field :note,       as: :text
+ # ^Automatically sets up reader and writer methods, which is why we commented
+ # out the old ones.
+
 
   def full_name
     "#{ @first_name } #{ @last_name }"
@@ -13,7 +25,7 @@ class Contact < ActiveRecord::Base
 
 end
 
-
+Contact.auto_upgrade!
 
 
 

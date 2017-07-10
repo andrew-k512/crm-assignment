@@ -2,3 +2,11 @@
 *.swp
 *.swn
 *.swo
+
+# Ignore the default SQLite database.
+*.sqlite3
+*.sqlite3-journal
+
+
+# ^Tells git to ignore .sqlite3 database files, and not include them in pushes.
+# (Databases and other non-text files should never be inside of git repositories!)
