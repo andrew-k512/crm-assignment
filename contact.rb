@@ -17,10 +17,10 @@ class Contact < ActiveRecord::Base
  # ^Automatically sets up reader and writer methods, which is why we commented
  # out the old ones.
 
-
-  def full_name
-    "#{ @first_name } #{ @last_name }"
-  end
+  # 
+  # def full_name
+  #   "#{@first_name} #{@last_name}"
+  # end
 
 
 end

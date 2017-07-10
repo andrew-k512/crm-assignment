@@ -62,11 +62,6 @@ class CRM
   end
 
 
-
-
-
-
-
   def modify_existing_contact
     print 'Enter the id of the contact you would like to modify: '
     puts""
@@ -90,10 +85,6 @@ class CRM
   end
 
 
-
-
-
-
   def delete_contact
     # display_all_contacts
     print 'Enter the id of the contact you want to delete: '
@@ -110,12 +101,12 @@ class CRM
 
 
 
-#==============================Three separate display methods used in different parts of this file
+#=====Three separate display methods used in different parts of this file
 
   def display_all_contacts
     print "Displaying all contacts: "
     puts ""
-    display_contacts(Contact.all)
+    display_contacts(Contact.all).inspect
   end
 
   def display_contact(contact)
