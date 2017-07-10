@@ -1,3 +1,5 @@
+
+
 class Contact
 
   #Reader & writers for contact attributes
@@ -13,7 +15,7 @@ class Contact
     @last_name = last_name
     @email = email
     @note = note
-    @id = @@next_idea
+    @id = @@next_id
 
     @@next_id += 1
   end
@@ -21,7 +23,7 @@ class Contact
   # This method should call the initializer,
   # store the newly created contact, and then return it
   def self.create(first_name, last_name, email, note)
-    new_contact = (first_name, last_name, email, note)
+    new_contact = Contact.new(first_name, last_name, email, note)
     @@contacts << new_contact
     return new_contact
   end
@@ -63,25 +65,25 @@ class Contact
   # eg. searching for 'first_name', 'Betty' should return the first contact named Betty
   def self.find_by(attribute, value)
     if attribute == 'first_name'
-      @@contacts.each do |value|
+      @@contacts.each do |search|
         if search.first_name == value
           return search
         end
       end
     elsif attribute == 'last_name'
-      @@contacts.each do |value|
+      @@contacts.each do |search|
         if search.last_name == value
           return search
         end
       end
     elsif attribute == 'note'
-      @@contacts.each do |value|
+      @@contacts.each do |search|
         if search.note == value
           return search
         end
       end
     elsif attribute == 'email'
-      @@contacts.each do |value|
+      @@contacts.each do |search|
         if search.email == value
           return search
         end
@@ -101,7 +103,8 @@ class Contact
   # This method should delete the contact
   # HINT: Check the Array class docs for built-in methods that might be useful here
   def delete(name)
-    @@contacts.delete_if name
+    if @@contacts.last_name == name
+      delete
   end
 
   # Feel free to add other methods here, if you need them.

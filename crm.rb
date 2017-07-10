@@ -1,6 +1,10 @@
+require_relative 'contact.rb'
+
 class CRM
 
   def initialize
+    @main_menu = true
+
 
   end
 
@@ -59,21 +63,36 @@ end
     print 'And what would you like to change it to?'
     value = gets.chomp
 
-    Contact.find_by('last_name' name).update(attribute, value)
+    Contact.find_by('last_name', name).update(attribute, value)
 
   end
 
   def delete_contact
+    print "What is the last name of the contact you would like to delete? \r\n"
+    name = gets.chomp
+
+    print "Contact #{name} has been deleted.\r\n"
+    Contact.find_by('last_name', name).delete(name)
 
   end
 
   def display_all_contacts
-    Contact.all
+   print Contact.all.inspect
   end
 
   def search_by_attribute
+    print "Please enter the attribute you would like to search by, first_name, last_name, or email."
+    attribute = gets.chomp
 
+    print "Now put in the value of that field to search."
+    value = gets.chomp
+
+    Contact.find_by(attribute, value)
+    
   end
 
 
 end
+
+a_crm_app = CRM.new
+a_crm_app.main_menu
