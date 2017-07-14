@@ -1,10 +1,6 @@
 require_relative 'contact.rb'
 
-class CRM
-
-  def initialize
-
-  end
+class CRM < Contact
 
   def main_menu
     while true
@@ -56,11 +52,10 @@ class CRM
       first_name: first_name,
       last_name:  last_name,
       email:      email,
-      note:       note
+      note:       note,
     )
 
   end
-
 
   def modify_existing_contact
     print 'Enter the id of the contact you would like to modify: '
@@ -101,47 +96,21 @@ class CRM
 
 
 
-#=====Three separate display methods used in different parts of this file
+#==============================Three separate display methods used in different parts of this file
+
+# def display_all_contacts
+#    print "Now displaying all contacts..."
+#    print "\n"
+#    print Contact.all.inspect
+#    print "\n"
+# end
 
   def display_all_contacts
-    print "Displaying all contacts: "
-    puts ""
-    display_contacts(Contact.all).inspect
-  end
-
-  def display_contact(contact)
-    puts "ID: #{contact.id}, Name: #{contact.full_name}, Email: #{contact.email}, Note: #{contact.note}"
-  end
-
-  def display_contacts(contacts)
-    contacts.each do |contact|
-      display_contact(contact)
+    all = Contact.all
+    all.each do |contact|
+    puts "#{contact.id}: #{contact.last_name}, #{contact.first_name}. #{contact.email}. #{contact.note}"
     end
   end
-
-
-
-
-
-
-  def search_by_attribute
-
-    puts 'Which attribute do you wish to search by?'
-    puts '1 = First name, 2 = Last name, 4 = email, 4 = note'
-    attribute_number = gets.to_i
-    attribute_name = translate_attribute_num_to_name(attribute_number)
-
-    puts "Search by #{attribute_name}: "
-    attribute_value = gets.chomp
-
-    contact = Contact.find_by(attribute_name => attribute_value)
-
-    display_contact(contact)
-
-  end
-
-
-
 
 
   def translate_attribute_num_to_name(attribute_number)
@@ -156,10 +125,6 @@ class CRM
        :note
     end
   end
-
-
-
-
 
 
 end

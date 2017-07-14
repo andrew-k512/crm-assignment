@@ -14,13 +14,16 @@ class Contact < ActiveRecord::Base
   field :last_name,  as: :string
   field :email,      as: :string
   field :note,       as: :text
- # ^Automatically sets up reader and writer methods, which is why we commented
- # out the old ones.
 
-  # 
-  # def full_name
-  #   "#{@first_name} #{@last_name}"
-  # end
+  #^Automatically sets up reader and writer methods, which is why we commented
+  # out the old ones.
+
+
+
+
+  def full_name
+     "#{ first_name } #{ last_name }"
+   end
 
 
 end
